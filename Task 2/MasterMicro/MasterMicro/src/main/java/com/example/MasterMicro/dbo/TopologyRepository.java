@@ -1,4 +1,8 @@
-package dbo;
+package com.example.MasterMicro.dbo;
 
-public class TopologyRepository {
+import com.example.MasterMicro.model.Topology;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface TopologyRepository extends JpaRepository<Topology,Long> {
+        public Topology findTopologyById(Long taskId);
 }
