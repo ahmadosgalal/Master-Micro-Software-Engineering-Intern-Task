@@ -32,10 +32,10 @@ public class TopologyController {
         return topologyService.writeJSON(topologyID);
     }
 
-    @GetMapping("/list")
-    public List<Topology> getTopologies()
+    @GetMapping("/querytopologies")
+    public List<Topology> queryTopologies()
     {
-        return topologyService.getAllTopologies();
+        return topologyService.queryTopologies();
     }
 
 }

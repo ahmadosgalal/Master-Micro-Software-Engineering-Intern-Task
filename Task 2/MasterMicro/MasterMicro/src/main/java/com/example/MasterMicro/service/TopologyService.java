@@ -30,7 +30,7 @@ public class TopologyService {
         return topologyDao.save(topology);
     }
 
-    public List<Topology> getAllTopologies() {
+    public List<Topology> queryTopologies() {
         return topologyDao.findAll();
     }
 
@@ -64,7 +64,7 @@ public class TopologyService {
         } catch (IOException e) {
             System.out.println("Unable to save topologies: " + e.getMessage());
         }
-        return this.getAllTopologies();
+        return this.queryTopologies();
     }
 
     public List<Topology> writeJSON(String topologyID) throws IOException {
@@ -72,7 +72,7 @@ public class TopologyService {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(new File("src/main/resources/json/test.json"), topology);
-        return getAllTopologies();
+        return queryTopologies();
     }
 
 }
