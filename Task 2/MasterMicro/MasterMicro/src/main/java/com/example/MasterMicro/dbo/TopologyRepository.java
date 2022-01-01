@@ -32,4 +32,8 @@ public class TopologyRepository {
                 }
                 return null;
         }
+
+        public boolean remove(String topologyID) {
+                return DB.removeIf(x->(x.getId()).equals(topologyID));
+        }
 }

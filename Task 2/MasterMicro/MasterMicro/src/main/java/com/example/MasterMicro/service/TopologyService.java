@@ -51,14 +51,10 @@ public class TopologyService {
             while ((c = reader.read()) != -1) {
                 textBuilder.append((char) c);
             }
-            //System.out.println(textBuilder);
-            //
 
-            //Topology topologies = mapper.readValue(inputStream,typeReference);
             Topology topology = new ObjectMapper()
                     .readerFor(Topology.class)
                     .readValue(String.valueOf(textBuilder));
-            //System.out.println(topology.getComponents());
             this.save(topology);
             System.out.println("Topology Saved!");
         } catch (IOException e) {
@@ -75,5 +71,9 @@ public class TopologyService {
         return queryTopologies();
     }
 
+
+    public boolean deleteTopology(String topologyID) {
+        return topologyDao.remove(topologyID);
+    }
 }
 

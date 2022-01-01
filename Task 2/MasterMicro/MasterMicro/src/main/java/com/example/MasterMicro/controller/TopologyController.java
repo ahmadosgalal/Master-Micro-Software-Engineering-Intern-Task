@@ -38,4 +38,10 @@ public class TopologyController {
         return topologyService.queryTopologies();
     }
 
+    @GetMapping("/deleteTopology/{topologyID}")
+    public boolean deleteTopology(@PathVariable("topologyID") String topologyID) throws IOException {
+
+        return topologyService.deleteTopology(topologyID);
+    }
+
 }
