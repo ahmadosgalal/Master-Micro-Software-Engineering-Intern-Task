@@ -5,6 +5,7 @@ import com.example.MasterMicro.service.TopologyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping("/topologies")
@@ -20,10 +21,15 @@ public class TopologyController {
     }
 
     @GetMapping("/readjson/{FileName}")
-    public List<Topology> addTopology(@PathVariable("FileName") String fileName)
+    public List<Topology> readJSON(@PathVariable("FileName") String fileName)
     {
-        //System.out.println(fileName);
         return topologyService.readJSON(fileName);
+    }
+
+    @GetMapping("/writejson/{topologyID}")
+    public List<Topology> writeJSON(@PathVariable("topologyID") String topologyID) throws IOException {
+
+        return topologyService.writeJSON(topologyID);
     }
 
     @GetMapping("/list")
@@ -31,28 +37,5 @@ public class TopologyController {
     {
         return topologyService.getAllTopologies();
     }
-//    @PostMapping
-//    public List<Topology> addTask(@RequestBody Topology topology)
-//    {
-//        return topologyService.addTopology(topology);
-//    }
-//
-//    @GetMapping(path = "{id}")
-//    public Optional<Topology> getTaskById(@PathVariable("id") Long id)
-//    {
-//        return topologyService.getTopologyByID(id);
-//    }
-//
-//
-//    @DeleteMapping(path = "{id}")
-//    public List<Topology> removeTask(@PathVariable("id") Long id)
-//    {
-//        return topologyService.removeTopology(id);
-//    }
-//
-//    @PutMapping(path = "{id}")
-//    public Topology updateTask(@PathVariable("id") Long id,@RequestBody Topology topology)
-//    {
-//        return topologyService.updateTopology(id, topology);
-//    }
+
 }

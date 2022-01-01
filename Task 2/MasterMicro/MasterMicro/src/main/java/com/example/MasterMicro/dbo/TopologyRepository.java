@@ -24,4 +24,12 @@ public class TopologyRepository {
                 return  topology;
         }
 
+        public Topology find(String topologyID) {
+                for(Topology topology :DB)
+                {
+                        if((topology.getId()).equals(topologyID))
+                                return topology;
+                }
+                return null;
+        }
 }
