@@ -1,5 +1,6 @@
 package com.example.MasterMicro.controller;
 
+import com.example.MasterMicro.model.Component;
 import com.example.MasterMicro.model.Topology;
 import com.example.MasterMicro.service.TopologyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,12 @@ public class TopologyController {
     public boolean deleteTopology(@PathVariable("topologyID") String topologyID) throws IOException {
 
         return topologyService.deleteTopology(topologyID);
+    }
+
+    @GetMapping("/querydevices/{topologyID}")
+    public List<Component> queryDevices(@PathVariable("topologyID") String topologyID) throws IOException {
+
+        return topologyService.queryDevices(topologyID);
     }
 
 }

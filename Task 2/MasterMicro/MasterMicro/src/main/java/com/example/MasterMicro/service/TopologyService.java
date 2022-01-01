@@ -1,6 +1,7 @@
 package com.example.MasterMicro.service;
 
 import com.example.MasterMicro.dbo.TopologyRepository;
+import com.example.MasterMicro.model.Component;
 import com.example.MasterMicro.model.Topology;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -74,6 +75,14 @@ public class TopologyService {
 
     public boolean deleteTopology(String topologyID) {
         return topologyDao.remove(topologyID);
+    }
+
+    public List<Component> queryDevices(String topologyID) {
+        Topology topology = topologyDao.find(topologyID);
+        if(topology!= null)
+            return topology.getComponents();
+        else
+            return null;
     }
 }
 
