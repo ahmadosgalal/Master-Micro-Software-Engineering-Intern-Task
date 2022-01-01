@@ -2,6 +2,7 @@ package com.example.MasterMicro.service;
 
 import com.example.MasterMicro.dbo.TopologyRepository;
 import com.example.MasterMicro.model.Component;
+import com.example.MasterMicro.model.Netlist;
 import com.example.MasterMicro.model.Topology;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,7 +44,8 @@ public class TopologyService {
         //System.out.println("Path= "+ path);
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        TypeReference<Topology> typeReference = new TypeReference<Topology>() {};
+        TypeReference<Topology> typeReference = new TypeReference<Topology>() {
+        };
         InputStream inputStream = TypeReference.class.getResourceAsStream(path);
         //
         StringBuilder textBuilder = new StringBuilder();
@@ -79,10 +82,38 @@ public class TopologyService {
 
     public List<Component> queryDevices(String topologyID) {
         Topology topology = topologyDao.find(topologyID);
-        if(topology!= null)
+        if (topology != null)
             return topology.getComponents();
         else
             return null;
+    }
+
+    public List<Component> queryDevicesWithNetlistNode(String topologyID, String nodeID) {
+        List<Component> connected = new ArrayList<>();
+        Topology topology = topologyDao.find(topologyID);
+        if (topology != null) {
+            List<Component> components = topology.getComponents();
+            for(Component component : components)
+            {
+                Netlist netlist = component.getNetlist();
+
+                String t1 = netlist.getT1();
+                String t2 = netlist.getT2();
+                String gate = netlist.getGate();
+                String drain = netlist.getDrain();
+                String source = netlist.getSource();
+                List<String> nodes = new ArrayList<>();
+                nodes.add(t1);
+                nodes.add(t2);
+                nodes.add(gate);
+                nodes.add(drain);
+                nodes.add(source);
+                if(nodes.contains(nodeID))
+                    connected.add(component);
+            }
+
+        }
+        return connected;
     }
 }
 

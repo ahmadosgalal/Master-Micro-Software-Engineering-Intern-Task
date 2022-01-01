@@ -51,4 +51,9 @@ public class TopologyController {
         return topologyService.queryDevices(topologyID);
     }
 
+    @GetMapping("/querydevicesnodes/{topologyID}/{nodeID}")
+    public List<Component> queryDevicesWithNetlistNode(@PathVariable("topologyID") String topologyID, @PathVariable("nodeID") String nodeID) throws IOException {
+        return topologyService.queryDevicesWithNetlistNode(topologyID,nodeID);
+    }
+
 }
