@@ -2,44 +2,104 @@ package com.example.MasterMicro.service;
 
 import com.example.MasterMicro.dbo.TopologyRepository;
 import com.example.MasterMicro.model.Topology;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TopologyService {
     @Autowired
     private TopologyRepository topologyDao;
 
-    public List<Topology> addTopology(Topology topology) {
-        topologyDao.save(topology);
+    public TopologyService(TopologyRepository topologyDao) {
+        this.topologyDao = topologyDao;
+    }
+
+    public Iterable<Topology> list() {
         return topologyDao.findAll();
     }
 
-    public List<Topology> getAllTopologies(){
+    public Topology save(Topology topology) {
+        return topologyDao.save(topology);
+    }
+
+    public List<Topology> getAllTopologies() {
         return topologyDao.findAll();
     }
 
-    public List<Topology> removeTopology(Long id) {
-        if(topologyDao.existsById(id))
-            topologyDao.deleteById(id);
-        return topologyDao.findAll();
-    }
+    public List<Topology> readJSON(String fileName) {
+        // read JSON and load json
+        String path = "/json/topology.json";
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        System.out.println("Path= "+ path);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        TypeReference<Topology> typeReference = new TypeReference<Topology>() {};
+        InputStream inputStream = TypeReference.class.getResourceAsStream(path);
+        //
+        StringBuilder textBuilder = new StringBuilder();
+        try (Reader reader = new BufferedReader(new InputStreamReader
+                (inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
+            int c = 0;
+            while ((c = reader.read()) != -1) {
+                textBuilder.append((char) c);
+            }
+            //System.out.println(textBuilder);
+            //
 
-    public Topology updateTopology(Long id, Topology topology) {
-
-        if(topologyDao.existsById(id)) {
-            Topology updatedTask = topologyDao.findTopologyById(id);
-            updatedTask.setState(topology.getState());
-            return topologyDao.save(updatedTask);
+            //Topology topologies = mapper.readValue(inputStream,typeReference);
+            Topology topology = new ObjectMapper()
+                    .readerFor(Topology.class)
+                    .readValue(String.valueOf(textBuilder));
+            System.out.println(topology.getComponents());
+            this.save(topology);
+            System.out.println("Topology Saved!");
+        } catch (IOException e) {
+            System.out.println("Unable to save topologies: " + e.getMessage());
         }
-        return null;
+        return this.getAllTopologies();
     }
-
-    public Optional<Topology> getTopologyByID(Long id) {
-        Optional<Topology> task = topologyDao.findById(id);
-        return task;
-    }
+//    public  Iterable<Topology> save(List<Topology> topologies){
+//        for(Topology topology : topologies)
+//            topologyDao.save(topology);
+//        //List<Topology> save = topologyDao.save(topologies);
+//        return topologyDao.findAll();
+//    }
+//    public List<Topology> addTopology(Topology topology) {
+//        topologyDao.save(topology);
+//        return topologyDao.findAll();
+//    }
+//
+//    public List<Topology> getAllTopologies(){
+//        return topologyDao.findAll();
+//    }
+//
+//    public List<Topology> removeTopology(Long id) {
+//        if(topologyDao.existsById(id))
+//            topologyDao.deleteById(id);
+//        return topologyDao.findAll();
+//    }
+//
+//    public Topology updateTopology(Long id, Topology topology) {
+//
+//        if(topologyDao.existsById(id)) {
+//            Topology updatedTask = topologyDao.findTopologyById(id);
+//            //updatedTask.setState(topology.getState());
+//            return topologyDao.save(updatedTask);
+//        }
+//        return null;
+//    }
+//
+//    public Optional<Topology> getTopologyByID(Long id) {
+//        Optional<Topology> task = topologyDao.findById(id);
+//        return task;
+//    }
 }
 

@@ -5,11 +5,9 @@ import com.example.MasterMicro.service.TopologyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-import java.util.Optional;
 import java.util.List;
 
-@RequestMapping("/api/v1/topology")
+@RequestMapping("/topologies")
 @RestController
 public class TopologyController {
 
@@ -21,28 +19,40 @@ public class TopologyController {
         this.topologyService = topologyService;
     }
 
-    @PostMapping
-    public List<Topology> addTask(@RequestBody Topology topology)
+    @GetMapping("/readjson/{FileName}")
+    public List<Topology> addTopology(@PathVariable("FileName") String fileName)
     {
-        return topologyService.addTopology(topology);
+        //System.out.println(fileName);
+        return topologyService.readJSON(fileName);
     }
 
-    @GetMapping(path = "{id}")
-    public Optional<Topology> getTaskById(@PathVariable("id") Long id)
+    @GetMapping("/list")
+    public List<Topology> getTopologies()
     {
-        return topologyService.getTopologyByID(id);
+        return topologyService.getAllTopologies();
     }
-
-
-    @DeleteMapping(path = "{id}")
-    public List<Topology> removeTask(@PathVariable("id") Long id)
-    {
-        return topologyService.removeTopology(id);
-    }
-
-    @PutMapping(path = "{id}")
-    public Topology updateTask(@PathVariable("id") Long id,@RequestBody Topology topology)
-    {
-        return topologyService.updateTopology(id, topology);
-    }
+//    @PostMapping
+//    public List<Topology> addTask(@RequestBody Topology topology)
+//    {
+//        return topologyService.addTopology(topology);
+//    }
+//
+//    @GetMapping(path = "{id}")
+//    public Optional<Topology> getTaskById(@PathVariable("id") Long id)
+//    {
+//        return topologyService.getTopologyByID(id);
+//    }
+//
+//
+//    @DeleteMapping(path = "{id}")
+//    public List<Topology> removeTask(@PathVariable("id") Long id)
+//    {
+//        return topologyService.removeTopology(id);
+//    }
+//
+//    @PutMapping(path = "{id}")
+//    public Topology updateTask(@PathVariable("id") Long id,@RequestBody Topology topology)
+//    {
+//        return topologyService.updateTopology(id, topology);
+//    }
 }
